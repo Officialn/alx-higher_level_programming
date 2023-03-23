@@ -1,28 +1,17 @@
 #!/usr/bin/python3
-"""List all cities from the db
-Username, password, and database name given as user args
-Can only use execute() once
-Sort ascending order by cities.id
-"""
-import sys
+"""  lists all states from the database hbtn_0e_0_usa """
 import MySQLdb
+import sys
+
 
 if __name__ == "__main__":
-    db = MySQLdb.connect(user=sys.argv[1],
-                         passwd=sys.argv[2],
-                         db=sys.argv[3],
-                         host='localhost',
-                         port=3306)
+    db = MySQLdb.connect(host="localhost", user=sys.argv[1],
+                         passwd=sys.argv[2], db=sys.argv[3], port=3306)
     cur = db.cursor()
-    cmd = """SELECT cities.id, cities.name, states.name
-         FROM states
-         INNER JOIN cities ON states.id = cities.state_id
-         ORDER BY cities.id ASC"""
-    cur.execute(cmd)
-    allCities = cur.fetchall()
-
-    for city in allCities:
-        print(city)
-
+    cur.execute("""SELECT cities.id, cities.name, states.name FROM
+                cities INNER JOIN states ON states.id=cities.state_id""")
+    rows = cur.fetchall()
+    for row in rows:
+        print(row)
     cur.close()
     db.close()

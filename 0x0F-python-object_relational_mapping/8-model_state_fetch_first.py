@@ -1,21 +1,20 @@
 #!/usr/bin/python3
-"""Print the first 'State' object from db 'hbtn_0e_6_usa'
-Script should take 3 args: username, pw, and db name
-Must use SQLAlchemy
+""" prints the first State object from the database hbtn_0e_6_usa
 """
 import sys
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy import create_engine
 from model_state import Base, State
+from sqlalchemy import (create_engine)
+from sqlalchemy.orm import sessionmaker
+
 
 if __name__ == "__main__":
-    engine = create_engine("mysql+mysqldb://{}:{}@localhost:3306/{}"
+    engine = create_engine('mysql+mysqldb://{}:{}@localhost:3306/{}'
                            .format(sys.argv[1], sys.argv[2], sys.argv[3]))
+    Base.metadata.create_all(engine)
     Session = sessionmaker(bind=engine)
     session = Session()
-
-    res = session.query(State.id, State.name).first()
-    if (res is None):
+    instance = session.query(State).first()
+    if instance is None:
         print("Nothing")
     else:
-        print("{:d}: {}".format(res[0], res[1]))
+        print(instance.id, instance.name, sep=": ")
